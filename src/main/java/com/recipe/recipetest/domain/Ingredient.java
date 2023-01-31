@@ -18,8 +18,8 @@ public class Ingredient {
     private String description;
     private BigDecimal amount;
 
-    @ManyToMany
-    private Set<Recipe> recipes;
+    @ManyToOne
+    private Recipe recipe;
 
     //Load in every time (just to show that this is possible)
     @OneToOne(fetch = FetchType.EAGER)

@@ -29,6 +29,9 @@ public class Recipe {
     @Lob
     private Byte[] image;
 
+    @Enumerated(value = EnumType.STRING)
+    private Difficulty difficulty;
+
     //Recipe owns note:if recipe is deleted, then note is also deleted
     @OneToOne(cascade = CascadeType.ALL)
     private Notes notes;
@@ -37,4 +40,10 @@ public class Recipe {
     // (PERSIST, REMOVE, REFRESH, MERGE, DETACH) to the relating entities.
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
     private Set<Ingredient> ingredients;
+
+    @ManyToMany
+    @JoinTable(name = "recipe_category",
+        joinColumns = @JoinColumn(name = "recipe_id"),
+        inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private Set<Category> categories;
 }
