@@ -12,12 +12,15 @@ import org.junit.jupiter.api.Test;
 
 class RecipeCommandToRecipeTest {
     public static final Long RECIPE_ID = 1L;
-    public static final Integer COOK_TIME = Integer.valueOf("5");
-    public static final Integer PREP_TIME = Integer.valueOf("7");
+    public static final String COOK_TIME_S = "5";
+    public static final String PREP_TIME_S = "7";
+    public static final String SERVINGS_S = "3";
+    public static final Integer COOK_TIME = Integer.valueOf(COOK_TIME_S);
+    public static final Integer PREP_TIME = Integer.valueOf(PREP_TIME_S);
     public static final String DESCRIPTION = "My Recipe";
     public static final String DIRECTIONS = "Directions";
     public static final Difficulty DIFFICULTY = Difficulty.EASY;
-    public static final Integer SERVINGS = Integer.valueOf("3");
+    public static final Integer SERVINGS = Integer.valueOf(SERVINGS_S);
     public static final String SOURCE = "Source";
     public static final String URL = "Some URL";
     public static final Long CAT_ID_1 = 1L;
@@ -31,7 +34,7 @@ class RecipeCommandToRecipeTest {
     void setUp() {
         converter = new RecipeCommandToRecipe(new CategoryCommandToCategory(),
                 new IngredientCommandToIngredient(new UnitOfMeasureCommandToUnitOfMeasure()),
-                new NotesCommandToNotes());
+                new NotesCommandToNotes(), new StringToIntegerConverter());
     }
 
     @Test
@@ -49,12 +52,12 @@ class RecipeCommandToRecipeTest {
         //given
         RecipeCommand recipeCommand = new RecipeCommand();
         recipeCommand.setId(RECIPE_ID);
-        recipeCommand.setCookTime(COOK_TIME);
-        recipeCommand.setPrepTime(PREP_TIME);
+        recipeCommand.setCookTime(COOK_TIME_S);
+        recipeCommand.setPrepTime(PREP_TIME_S);
         recipeCommand.setDescription(DESCRIPTION);
         recipeCommand.setDifficulty(DIFFICULTY);
         recipeCommand.setDirections(DIRECTIONS);
-        recipeCommand.setServings(SERVINGS);
+        recipeCommand.setServings(SERVINGS_S);
         recipeCommand.setSource(SOURCE);
         recipeCommand.setUrl(URL);
 

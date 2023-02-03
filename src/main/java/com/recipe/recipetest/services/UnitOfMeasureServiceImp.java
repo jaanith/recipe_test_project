@@ -6,6 +6,8 @@ import com.recipe.recipetest.repositories.UnitOfMeasureRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class UnitOfMeasureServiceImp implements UnitOfMeasureService {
@@ -21,6 +23,8 @@ public class UnitOfMeasureServiceImp implements UnitOfMeasureService {
 
     @Override
     public Set<UnitOfMeasureCommand> listAllUoms() {
-        return null;
+        return StreamSupport.stream(unitOfMeasureRepository.findAll().spliterator(), false)
+                .map(unitOfMeasureToUnitOfMeasureCommand::convert)
+                .collect(Collectors.toSet());
     }
 }

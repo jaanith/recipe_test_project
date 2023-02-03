@@ -3,6 +3,7 @@ package com.recipe.recipetest.services;
 import com.recipe.recipetest.commands.RecipeCommand;
 import com.recipe.recipetest.converters.RecipeCommandToRecipe;
 import com.recipe.recipetest.converters.RecipeToRecipeCommand;
+import com.recipe.recipetest.domain.Ingredient;
 import com.recipe.recipetest.domain.Recipe;
 import com.recipe.recipetest.repositories.RecipeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,7 +43,7 @@ class RecipeServiceImpTest {
         //recipeRepository = Mockito.mock(RecipeRepository.class);
         //Variant 2
         closeable = MockitoAnnotations.openMocks(this);
-        recipeService = new RecipeServiceImp(recipeRepository);
+        recipeService = new RecipeServiceImp(recipeRepository, recipeCommandToRecipe, recipeToRecipeCommand);
     }
 
     @Test
@@ -60,7 +61,7 @@ class RecipeServiceImpTest {
     }
 
     @Test
-    public void getRecipeByIdTest() throws Exception {
+    public void getRecipeByIdTest()  {
         Recipe recipe = new Recipe();
         recipe.setId(1L);
         Optional<Recipe> recipeOptional = Optional.of(recipe);
@@ -75,7 +76,7 @@ class RecipeServiceImpTest {
     }
 
     @Test
-    public void getRecipeCommandByIdTest() throws Exception {
+    public void getRecipeCommandByIdTest() {
         Recipe recipe = new Recipe();
         recipe.setId(1L);
         Optional<Recipe> recipeOptional = Optional.of(recipe);
@@ -93,5 +94,4 @@ class RecipeServiceImpTest {
         verify(recipeRepository, times(1)).findById(anyLong());
         verify(recipeRepository, never()).findAll();
     }
-
 }

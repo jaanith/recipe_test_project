@@ -29,9 +29,13 @@ public class IngredientToIngredientCommand implements Converter<Ingredient, Ingr
         if (ingredient.getRecipe() != null) {
             ingredientCommand.setRecipeId(ingredient.getRecipe().getId());
         }
+        else  {
+            ingredientCommand.setRecipeId(0L);
+        }
         ingredientCommand.setAmount(ingredient.getAmount());
         ingredientCommand.setDescription(ingredient.getDescription());
-        ingredientCommand.setUnitOfMeasureCommand(unitOfMeasureConverter.convert(ingredient.getUnitOfMeasure()));
+        ingredientCommand.setUnitOfMeasure(unitOfMeasureConverter.convert(ingredient.getUnitOfMeasure()));
+        //System.out.println("Ingredient: " + ingredientCommand.getId() + " for recipe " + ingredientCommand.getRecipeId());
         return ingredientCommand;
     }
 }

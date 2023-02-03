@@ -32,6 +32,7 @@
 
                         <div class="panel-heading">
                             <h1 class="panel-title">My Recipes!</h1>
+                            <a href="#" th:href="@{'/recipe/new'}">Insert new</a>
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive" th:if="${not #lists.isEmpty(recipes)}">

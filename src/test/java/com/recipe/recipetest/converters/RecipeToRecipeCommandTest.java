@@ -10,12 +10,15 @@ import org.junit.jupiter.api.Test;
 class RecipeToRecipeCommandTest {
 
     public static final Long RECIPE_ID = 1L;
-    public static final Integer COOK_TIME = Integer.valueOf("5");
-    public static final Integer PREP_TIME = Integer.valueOf("7");
+    public static final String COOK_TIME_S = "5";
+    public static final String PREP_TIME_S = "7";
+    public static final String SERVINGS_S = "3";
+    public static final Integer COOK_TIME = Integer.valueOf(COOK_TIME_S);
+    public static final Integer PREP_TIME = Integer.valueOf(PREP_TIME_S);
+    public static final Integer SERVINGS = Integer.valueOf(SERVINGS_S);
     public static final String DESCRIPTION = "My Recipe";
     public static final String DIRECTIONS = "Directions";
     public static final Difficulty DIFFICULTY = Difficulty.EASY;
-    public static final Integer SERVINGS = Integer.valueOf("3");
     public static final String SOURCE = "Source";
     public static final String URL = "Some URL";
     public static final Long CAT_ID_1 = 1L;
@@ -86,12 +89,12 @@ class RecipeToRecipeCommandTest {
         //then
         Assertions.assertNotNull(command);
         Assertions.assertEquals(RECIPE_ID, command.getId());
-        Assertions.assertEquals(COOK_TIME, command.getCookTime());
-        Assertions.assertEquals(PREP_TIME, command.getPrepTime());
+        Assertions.assertEquals(COOK_TIME_S, command.getCookTime());
+        Assertions.assertEquals(PREP_TIME_S, command.getPrepTime());
         Assertions.assertEquals(DESCRIPTION, command.getDescription());
         Assertions.assertEquals(DIFFICULTY, command.getDifficulty());
         Assertions.assertEquals(DIRECTIONS, command.getDirections());
-        Assertions.assertEquals(SERVINGS, command.getServings());
+        Assertions.assertEquals(SERVINGS_S, command.getServings());
         Assertions.assertEquals(SOURCE, command.getSource());
         Assertions.assertEquals(URL, command.getUrl());
         Assertions.assertEquals(NOTES_ID, command.getNotes().getId());
