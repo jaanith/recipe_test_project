@@ -2,6 +2,7 @@ package com.recipe.recipetest.domain;
 
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@EqualsAndHashCode(exclude = {"recipe"})
 @Entity
 public class Category {
 
