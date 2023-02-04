@@ -1,6 +1,7 @@
 package com.recipe.recipetest.controllers;
 
 import com.recipe.recipetest.commands.RecipeCommand;
+import com.recipe.recipetest.converters.StringToLongConverter;
 import com.recipe.recipetest.services.ImageService;
 import com.recipe.recipetest.services.RecipeService;
 import org.junit.jupiter.api.Test;
@@ -42,8 +43,10 @@ class ImageControllerTest {
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
 
-        controller = new ImageController(imageService, recipeService);
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        controller = new ImageController(imageService, recipeService, new StringToLongConverter());
+        mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setControllerAdvice(new ControllerExceptionHandler())
+                .build();
     }
 
     @Test
@@ -105,5 +108,13 @@ class ImageControllerTest {
         byte[] reponseBytes = response.getContentAsByteArray();
 
         Assertions.assertEquals(s.getBytes().length, reponseBytes.length);
+    }
+
+    @Test
+    public void testGetImageNumberFormatException() throws Exception {
+
+        mockMvc.perform(get("/recipe/asdf/recipeimage"))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("400error"));
     }
 }

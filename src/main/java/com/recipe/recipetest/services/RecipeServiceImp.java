@@ -4,6 +4,7 @@ import com.recipe.recipetest.commands.RecipeCommand;
 import com.recipe.recipetest.converters.RecipeCommandToRecipe;
 import com.recipe.recipetest.converters.RecipeToRecipeCommand;
 import com.recipe.recipetest.domain.Recipe;
+import com.recipe.recipetest.exceptions.NotFoundException;
 import com.recipe.recipetest.repositories.RecipeRepository;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,6 @@ public class RecipeServiceImp implements RecipeService {
 
     public Set<Recipe> getRecipes() {
         Set<Recipe> recipes = new HashSet<>();
-        //recipeRepository.findAll().forEach(recipe -> recipes.add(recipe));
         recipeRepository.findAll().iterator().forEachRemaining(recipes::add);
         return recipes;
     }
@@ -36,7 +36,7 @@ public class RecipeServiceImp implements RecipeService {
     public Recipe findById(Long l) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(l);
         if(recipeOptional.isEmpty()){
-            throw new RuntimeException("Recipe is not present!");
+            throw new NotFoundException("Recipe not found. for ID value of " + l.toString());
         }
         return recipeOptional.get();
     }

@@ -2,6 +2,7 @@ package com.recipe.recipetest.controllers;
 
 import com.recipe.recipetest.commands.IngredientCommand;
 import com.recipe.recipetest.commands.RecipeCommand;
+import com.recipe.recipetest.converters.StringToLongConverter;
 import com.recipe.recipetest.services.IngredientService;
 import com.recipe.recipetest.services.RecipeService;
 import com.recipe.recipetest.services.UnitOfMeasureService;
@@ -40,7 +41,10 @@ class IngredientControllerTest {
     @BeforeEach
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
-        controller = new IngredientController(ingredientService, recipeService, unitOfMeasureService);
+        controller = new IngredientController(ingredientService,
+                recipeService,
+                unitOfMeasureService,
+                new StringToLongConverter());
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 
@@ -73,6 +77,7 @@ class IngredientControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipe/ingredient/show"))
                 .andExpect(model().attributeExists("ingredient"));
+
     }
 
     @Test
