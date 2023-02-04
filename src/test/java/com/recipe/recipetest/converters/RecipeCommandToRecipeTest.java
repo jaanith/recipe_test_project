@@ -10,7 +10,7 @@ import com.recipe.recipetest.exceptions.BadNumberFormatException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
+
 
 class RecipeCommandToRecipeTest {
     public static final Long RECIPE_ID = 1L;
@@ -32,11 +32,17 @@ class RecipeCommandToRecipeTest {
     public static final Long NOTES_ID = 9L;
     RecipeCommandToRecipe converter;
 
+    IngredientCommandToIngredient ingredientCommandToIngredient;
+
+
     @BeforeEach
     void setUp() {
+
+        ingredientCommandToIngredient = new IngredientCommandToIngredient(new UnitOfMeasureCommandToUnitOfMeasure());
         converter = new RecipeCommandToRecipe(new CategoryCommandToCategory(),
-                new IngredientCommandToIngredient(new UnitOfMeasureCommandToUnitOfMeasure()),
-                new NotesCommandToNotes(), new StringToIntegerConverter());
+                                            ingredientCommandToIngredient,
+                                            new NotesCommandToNotes(),
+                                            new StringToIntegerConverter());
     }
 
     @Test
@@ -49,7 +55,6 @@ class RecipeCommandToRecipeTest {
         Assertions.assertThrows(BadNumberFormatException.class, () -> {
             converter.convert(new RecipeCommand());
         });
-        //Assertions.assertNotNull(converter.convert(new RecipeCommand()));
     }
 
     @Test

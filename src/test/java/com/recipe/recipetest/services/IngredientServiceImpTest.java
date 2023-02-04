@@ -1,10 +1,7 @@
 package com.recipe.recipetest.services;
 
 import com.recipe.recipetest.commands.IngredientCommand;
-import com.recipe.recipetest.converters.IngredientCommandToIngredient;
-import com.recipe.recipetest.converters.IngredientToIngredientCommand;
-import com.recipe.recipetest.converters.UnitOfMeasureCommandToUnitOfMeasure;
-import com.recipe.recipetest.converters.UnitOfMeasureToUnitOfMeasureCommand;
+import com.recipe.recipetest.converters.*;
 import com.recipe.recipetest.domain.Ingredient;
 import com.recipe.recipetest.domain.Recipe;
 import com.recipe.recipetest.repositories.RecipeRepository;
@@ -34,15 +31,13 @@ class IngredientServiceImpTest {
     IngredientService ingredientService;
     AutoCloseable closeable;
 
-
     @BeforeEach
     void setUp() {
-
         closeable = MockitoAnnotations.openMocks(this);
-        IngredientToIngredientCommand ingredientToIngredientCommand = new IngredientToIngredientCommand(new UnitOfMeasureToUnitOfMeasureCommand());
         IngredientCommandToIngredient ingredientCommandToIngredient = new IngredientCommandToIngredient(new UnitOfMeasureCommandToUnitOfMeasure());
+        IngredientToIngredientCommand ingredientToIngredientCommand = new IngredientToIngredientCommand(new UnitOfMeasureToUnitOfMeasureCommand());
         ingredientService = new IngredientServiceImp(ingredientToIngredientCommand, ingredientCommandToIngredient,
-                recipeRepository, unitOfMeasureRepository);
+                recipeRepository, unitOfMeasureRepository, new UnitOfMeasureToUnitOfMeasureCommand());
     }
 
     @Test

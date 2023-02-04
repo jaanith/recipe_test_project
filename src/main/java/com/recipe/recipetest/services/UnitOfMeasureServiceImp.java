@@ -2,9 +2,11 @@ package com.recipe.recipetest.services;
 
 import com.recipe.recipetest.commands.UnitOfMeasureCommand;
 import com.recipe.recipetest.converters.UnitOfMeasureToUnitOfMeasureCommand;
+import com.recipe.recipetest.domain.UnitOfMeasure;
 import com.recipe.recipetest.repositories.UnitOfMeasureRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -27,4 +29,5 @@ public class UnitOfMeasureServiceImp implements UnitOfMeasureService {
                 .map(unitOfMeasureToUnitOfMeasureCommand::convert)
                 .collect(Collectors.toSet());
     }
+
 }

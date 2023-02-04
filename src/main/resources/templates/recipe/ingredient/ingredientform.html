@@ -23,6 +23,7 @@
     </head>
     <body>
         <!--/*@thymesVar id="recipe" type="com.recipe.recipetest.commands.IngredientCommand"*/-->
+        <!--/*@thymesVar id="recipe" type="com.recipe.recipetest.commands.UnitOfMeasureCommand"*/-->
         <div class="container-fluid" style="margin-top: 20px">
             <div class="row">
                 <div class="col-md-6 col-md-offset-3">
@@ -49,7 +50,7 @@
 
                                         <div class="col-md-3 form-group">
                                             <label>UOM:</label>
-                                            <select class="form-control" name="uom.id">
+                                            <select class="form-control" name="uom.id" th:field="*{unitOfMeasureId}">
                                                 <option th:each="uomEach : ${uomList}"
                                                         th:value="${uomEach.id}"
                                                         th:selected="${uomEach.id.equals(ingredient.unitOfMeasure.id)}"

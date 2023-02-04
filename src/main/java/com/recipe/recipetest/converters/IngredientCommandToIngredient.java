@@ -13,8 +13,8 @@ public class IngredientCommandToIngredient implements Converter<IngredientComman
 
     private final UnitOfMeasureCommandToUnitOfMeasure unitOfMeasureConverter;
 
-    public IngredientCommandToIngredient(UnitOfMeasureCommandToUnitOfMeasure uomConverter) {
-        this.unitOfMeasureConverter = uomConverter;
+    public IngredientCommandToIngredient(UnitOfMeasureCommandToUnitOfMeasure unitOfMeasureConverter) {
+        this.unitOfMeasureConverter = unitOfMeasureConverter;
     }
 
     @Nullable
