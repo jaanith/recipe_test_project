@@ -86,6 +86,7 @@ class IngredientServiceImpTest {
         IngredientCommand command = new IngredientCommand();
         command.setId(3L);
         command.setRecipeId(2L);
+        command.setUnitOfMeasureId("1");
 
         Optional<Recipe> recipeOptional = Optional.of(new Recipe());
 
