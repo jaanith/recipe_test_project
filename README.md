@@ -1,4 +1,4 @@
-[![jaanith](https://circleci.com/gh/jaanith/recipe_test_project.svg?style=svg)](https://circleci.com/gh/jaanith/recipe_test_project)
+[![Circleci](https://circleci.com/gh/jaanith/recipe_test_project.svg?style=svg)](https://circleci.com/gh/jaanith/recipe_test_project)
 
 
 ## Java Spring Boot example
