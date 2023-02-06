@@ -36,7 +36,7 @@ class ImageServiceImpTest {
     void saveImageFile() throws IOException {
 
         //given
-        Long id = 1L;
+        String id = "1L";
         MultipartFile multipartFile = new MockMultipartFile("imagefile", "testing.txt", "text/plain",
                 "Spring Framework Guru".getBytes());
 
@@ -44,7 +44,7 @@ class ImageServiceImpTest {
         recipe.setId(id);
         Optional<Recipe> recipeOptional = Optional.of(recipe);
 
-        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+        when(recipeRepository.findById(anyString())).thenReturn(recipeOptional);
 
         ArgumentCaptor<Recipe> argumentCaptor = ArgumentCaptor.forClass(Recipe.class);
 

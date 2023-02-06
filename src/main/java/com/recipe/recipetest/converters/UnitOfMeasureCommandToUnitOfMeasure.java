@@ -21,7 +21,7 @@ public class UnitOfMeasureCommandToUnitOfMeasure implements Converter<UnitOfMeas
         }
 
         final UnitOfMeasure uom = new UnitOfMeasure();
-        if(source.getId() != null) {
+        if(source.getId() != null && !source.getId().equals("")) {
             uom.setId(source.getId());
         }
         uom.setDescription(source.getDescription());

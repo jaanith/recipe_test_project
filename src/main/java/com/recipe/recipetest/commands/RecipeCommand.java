@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.URL;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -21,7 +23,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class RecipeCommand {
 
-    private Long id;
+    private String id;
 
     @NotEmpty
     @Size(min = 3, max = 255)
@@ -34,10 +36,10 @@ public class RecipeCommand {
     private String url;
     @NotEmpty
     private String directions;
-    private Set<IngredientCommand> ingredients = new HashSet<>();
+    private List<IngredientCommand> ingredients = new ArrayList<>();
     private Difficulty difficulty;
     private NotesCommand notes;
-    private Set<CategoryCommand> categories = new HashSet<>();
+    private List<CategoryCommand> categories = new ArrayList<>();
     private Byte[] image;
 
 

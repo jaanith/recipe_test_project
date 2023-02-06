@@ -1,24 +1,17 @@
 package com.recipe.recipetest.domain;
 
-import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"recipe"})
-@Entity
+//@Document
 public class Notes {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @OneToOne
+    private String id;
     private Recipe recipe;
-
-    @Lob
     private String recipeNotes;
 }

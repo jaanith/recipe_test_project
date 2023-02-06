@@ -15,8 +15,8 @@ class IngredientCommandToIngredientTest {
 
     public static final BigDecimal AMOUNT = new BigDecimal("1");
     public static final String DESCRIPTION = "Cheeseburger";
-    public static final Long ID_VALUE = 1L;
-    public static final Long UOM_ID = 2L;
+    public static final String ID_VALUE = "1L";
+    public static final String UOM_ID = "2L";
 
     IngredientCommandToIngredient converter;
 
@@ -55,7 +55,7 @@ class IngredientCommandToIngredientTest {
         Assertions.assertEquals(ID_VALUE, ingredient.getId());
         Assertions.assertEquals(AMOUNT, ingredient.getAmount());
         Assertions.assertEquals(DESCRIPTION, ingredient.getDescription());
-        Long newId = ingredient.getUnitOfMeasure().getId();
+        String newId = ingredient.getUnitOfMeasure().getId();
         Assertions.assertEquals(UOM_ID, newId);
     }
 

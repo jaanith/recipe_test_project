@@ -1,22 +1,27 @@
 package com.recipe.recipetest.domain;
 
 
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
 @Getter
 @Setter
-@Entity
+@Document(collection = "recipes")
 public class Recipe {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     private String description;
     private Integer prepTime;
@@ -24,40 +29,23 @@ public class Recipe {
     private Integer servings;
     private String source;
     private String url;
-
-    @Lob
     private String directions;
-
-    @Lob
+    private List<Ingredient> ingredients = new ArrayList<>();
     private Byte[] image;
-
-    @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
-
-    //Recipe owns note:if recipe is deleted, then note is also deleted
-    @OneToOne(cascade = CascadeType.ALL)
     private Notes notes;
 
-    //The meaning of CascadeType.ALL is that the persistence will propagate (cascade) all EntityManager operations
-    // (PERSIST, REMOVE, REFRESH, MERGE, DETACH) to the relating entities.
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
-    private Set<Ingredient> ingredients = new HashSet<>();
+    @DBRef
+    private List<Category> categories = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(name = "recipe_category",
-        joinColumns = @JoinColumn(name = "recipe_id"),
-        inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private Set<Category> categories = new HashSet<>();
-
-    public Ingredient addIngredient(Ingredient newIngredient) {
-        ingredients.add(newIngredient);
-        newIngredient.setRecipe(this);
-        return newIngredient;
+    public void setNotes(Notes notes) {
+        if (notes != null) {
+            this.notes = notes;
+        }
     }
 
-    public Notes addNote(Notes newNote) {
-        newNote.setRecipe(this);
-        this.notes = newNote;
-        return newNote;
+    public Recipe addIngredient(Ingredient ingredient){
+        this.ingredients.add(ingredient);
+        return this;
     }
 }

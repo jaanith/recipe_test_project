@@ -1,30 +1,29 @@
 package com.recipe.recipetest.domain;
 
-import jakarta.persistence.*;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
-import java.util.Set;
+import java.util.UUID;
+
 
 @Getter
 @Setter
-@Entity
+//@Document
 @NoArgsConstructor
 public class Ingredient {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    //@Id
+    private String id = UUID.randomUUID().toString();
     private String description;
     private BigDecimal amount;
-
-    @ManyToOne
     private Recipe recipe;
-
-    //Load in every time (just to show that this is possible)
-    @OneToOne(fetch = FetchType.EAGER)
+    @DBRef
     private UnitOfMeasure unitOfMeasure;
 
     public Ingredient(String description, BigDecimal amount, UnitOfMeasure unit) {

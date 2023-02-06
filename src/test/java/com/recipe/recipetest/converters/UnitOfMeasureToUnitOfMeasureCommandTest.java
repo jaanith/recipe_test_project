@@ -11,7 +11,7 @@ import static org.junit.Assert.assertNull;
 
 class UnitOfMeasureToUnitOfMeasureCommandTest {
 
-    public static final Long ID_VALUE = new Long(1L);
+    public static final String ID_VALUE = "1L";
     public static final String DESCRIPTION = "description";
     CategoryCommandToCategory converter;
 

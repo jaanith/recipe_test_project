@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 
 class RecipeCommandToRecipeTest {
-    public static final Long RECIPE_ID = 1L;
+    public static final String RECIPE_ID = "1L";
     public static final String COOK_TIME_S = "5";
     public static final String PREP_TIME_S = "7";
     public static final String SERVINGS_S = "3";
@@ -25,11 +25,11 @@ class RecipeCommandToRecipeTest {
     public static final Integer SERVINGS = Integer.valueOf(SERVINGS_S);
     public static final String SOURCE = "Source";
     public static final String URL = "Some URL";
-    public static final Long CAT_ID_1 = 1L;
-    public static final Long CAT_ID2 = 2L;
-    public static final Long INGRED_ID_1 = 3L;
-    public static final Long INGRED_ID_2 = 4L;
-    public static final Long NOTES_ID = 9L;
+    public static final String CAT_ID_1 = "1L";
+    public static final String CAT_ID2 = "2L";
+    public static final String INGRED_ID_1 = "3L";
+    public static final String INGRED_ID_2 = "4L";
+    public static final String NOTES_ID = "9L";
     RecipeCommandToRecipe converter;
 
     IngredientCommandToIngredient ingredientCommandToIngredient;

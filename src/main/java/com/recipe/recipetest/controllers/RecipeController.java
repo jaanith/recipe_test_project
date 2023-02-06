@@ -26,8 +26,7 @@ public class RecipeController {
 
     @RequestMapping("/recipe/{id}/show")
     public String ShowById(@PathVariable String id, Model model) {
-        Long idLong = stringToLongConverter.convert(id);
-        model.addAttribute("recipe", recipeService.findById(idLong));
+        model.addAttribute("recipe", recipeService.findById(id));
         return "recipe/show";
     }
 
@@ -47,8 +46,7 @@ public class RecipeController {
     @GetMapping
     @RequestMapping("/recipe/{id}/update")
     public String updateRecipe(@PathVariable String id, Model model){
-        Long idLong = stringToLongConverter.convert(id);
-        RecipeCommand newRecipeCommand = recipeService.findCommandById(idLong);
+        RecipeCommand newRecipeCommand = recipeService.findCommandById(id);
         if (newRecipeCommand != null) {
             model.addAttribute("recipe", newRecipeCommand );
             return "recipe/recipeform";
@@ -73,9 +71,7 @@ public class RecipeController {
     @GetMapping
     @RequestMapping("/recipe/{id}/delete")
     public String deleteById(@PathVariable String id){
-        log.debug("Deleting id: " + id);
-        Long idLong = stringToLongConverter.convert(id);
-        recipeService.deleteById(idLong);
+        recipeService.deleteById(id);
         return "redirect:/";
     }
 }

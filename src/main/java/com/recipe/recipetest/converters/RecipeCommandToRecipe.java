@@ -38,8 +38,9 @@ public class RecipeCommandToRecipe implements Converter<RecipeCommand, Recipe> {
         int prepTime = stringToIntegerConverter.convert(source.getPrepTime());
         int servingsTime = stringToIntegerConverter.convert(source.getServings());
 
-
-        recipe.setId(source.getId());
+        if (source.getId() != null && !source.getId().equals("")) {
+            recipe.setId(source.getId());
+        }
         recipe.setCookTime(cookTime);
         recipe.setPrepTime(prepTime);
         recipe.setServings(servingsTime);

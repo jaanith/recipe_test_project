@@ -1,5 +1,6 @@
 package com.recipe.recipetest.repositories;
 
+import com.recipe.recipetest.bootstrap.RecipeBootstrap;
 import com.recipe.recipetest.domain.UnitOfMeasure;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,14 +15,26 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-//@ExtendWith(SpringExtension.class)
+@ExtendWith(SpringExtension.class)
 class UnitOfMeasureRepositoryTest {
 
     @Autowired
     UnitOfMeasureRepository unitOfMeasureRepository;
 
+    @Autowired
+    CategoryRepository categoryRepository;
+
+    @Autowired
+    RecipeRepository recipeRepository;
+
+
     @BeforeEach
     void setUp() {
+        recipeRepository.deleteAll();
+        unitOfMeasureRepository.deleteAll();
+        categoryRepository.deleteAll();
+        RecipeBootstrap recipeBootstrap = new RecipeBootstrap(categoryRepository, recipeRepository, unitOfMeasureRepository);
+        recipeBootstrap.onApplicationEvent(null);
     }
 
     @Test

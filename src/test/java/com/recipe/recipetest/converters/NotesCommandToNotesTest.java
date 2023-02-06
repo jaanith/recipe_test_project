@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 class NotesCommandToNotesTest {
 
-    public static final Long ID_VALUE = 1L;
+    public static final String ID_VALUE = "1L";
     public static final String RECIPE_NOTES = "Notes";
     NotesCommandToNotes converter;
 

@@ -1,17 +1,17 @@
 package com.recipe.recipetest.domain;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Getter
 @Setter
-@Entity
+@Document
 public class UnitOfMeasure {
 
     @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY)
-    private long Id;
-
+    private String Id;
     private String description;
 }

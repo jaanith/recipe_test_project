@@ -39,7 +39,7 @@ public class IngredientServiceImp implements IngredientService {
     }
 
     @Override
-    public IngredientCommand findByRecipeIdAndIngredientId(Long recipeId, Long ingredientId) {
+    public IngredientCommand findByRecipeIdAndIngredientId(String recipeId, String ingredientId) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
 
         if (recipeOptional.isEmpty()){
@@ -60,7 +60,7 @@ public class IngredientServiceImp implements IngredientService {
         return ingredientCommandOptional.get();
     }
 
-    public IngredientCommand ingredientNotFound(String message, Long id) {
+    public IngredientCommand ingredientNotFound(String message, String id) {
         log.error(message + id);
         return null;
     }
@@ -105,7 +105,7 @@ public class IngredientServiceImp implements IngredientService {
                     .findFirst();
 
             //check by description
-            if(!savedIngredientOptional.isPresent()){
+            if(savedIngredientOptional.isEmpty()){
                 //not totally safe... But best guess
                 savedIngredientOptional = savedRecipe.getIngredients().stream()
                         .filter(recipeIngredients -> recipeIngredients.getDescription().equals(command.getDescription()))
@@ -121,7 +121,7 @@ public class IngredientServiceImp implements IngredientService {
     }
 
     @Override
-    public void deleteById(Long recipeId, Long idToDelete) {
+    public void deleteById(String recipeId, String idToDelete) {
 
         log.debug("Deleting ingredient: " + recipeId + ":" + idToDelete);
 
@@ -150,8 +150,7 @@ public class IngredientServiceImp implements IngredientService {
     }
 
     private UnitOfMeasureCommand getUnitOfMeasureFromIngredientCommand(String value) {
-        Long id = Long.parseLong(value);
-        Optional<UnitOfMeasure> uom = unitOfMeasureRepository.findById(id);
+        Optional<UnitOfMeasure> uom = unitOfMeasureRepository.findById(value);
         return uom.map(unitOfMeasureToUnitOfMeasureCommand::convert).orElse(null);
     }
 }

@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.assertEquals;
 
+//@DataMongoTest
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class RecipeServiceIT {

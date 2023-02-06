@@ -30,7 +30,7 @@ public class IngredientToIngredientCommand implements Converter<Ingredient, Ingr
             ingredientCommand.setRecipeId(ingredient.getRecipe().getId());
         }
         else  {
-            ingredientCommand.setRecipeId(0L);
+            ingredientCommand.setRecipeId("0L");
         }
         ingredientCommand.setAmount(ingredient.getAmount());
         ingredientCommand.setDescription(ingredient.getDescription());

@@ -1,6 +1,6 @@
 package com.recipe.recipetest.domain;
 
-import org.aspectj.lang.annotation.Before;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +17,7 @@ class CategoryTest {
 
     @Test
     void getId() {
-        Long testIdValue = 4L;
+        String testIdValue = "4L";
         category.setId(testIdValue);
         assertEquals(testIdValue, category.getId());
     }
