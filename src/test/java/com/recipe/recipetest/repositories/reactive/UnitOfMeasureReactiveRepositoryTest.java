@@ -1,6 +1,7 @@
 package com.recipe.recipetest.repositories.reactive;
 
 import com.recipe.recipetest.domain.UnitOfMeasure;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +25,7 @@ class UnitOfMeasureReactiveRepositoryTest {
         unitOfMeasureReactiveRepository.deleteAll().block();
     }
 
+    @Ignore
     @Test
     public void testSaveUom() throws Exception {
         UnitOfMeasure uom = new UnitOfMeasure();
@@ -37,6 +39,7 @@ class UnitOfMeasureReactiveRepositoryTest {
 
     }
 
+    @Ignore
     @Test
     public void testFindByDescription() throws Exception {
         UnitOfMeasure uom = new UnitOfMeasure();

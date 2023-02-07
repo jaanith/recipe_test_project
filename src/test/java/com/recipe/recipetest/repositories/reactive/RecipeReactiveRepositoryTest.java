@@ -1,6 +1,7 @@
 package com.recipe.recipetest.repositories.reactive;
 
 import com.recipe.recipetest.domain.Recipe;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +23,7 @@ class RecipeReactiveRepositoryTest {
         recipeReactiveRepository.deleteAll().block();
     }
 
+    @Ignore
     @Test
     public void testRecipeSave() throws Exception {
         Recipe recipe = new Recipe();

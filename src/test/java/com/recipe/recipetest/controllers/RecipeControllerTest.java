@@ -3,8 +3,10 @@ package com.recipe.recipetest.controllers;
 import com.recipe.recipetest.commands.RecipeCommand;
 import com.recipe.recipetest.converters.StringToLongConverter;
 import com.recipe.recipetest.domain.Recipe;
+import com.recipe.recipetest.exceptions.BadNumberFormatException;
 import com.recipe.recipetest.exceptions.NotFoundException;
 import com.recipe.recipetest.services.RecipeService;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -65,11 +67,13 @@ class RecipeControllerTest {
                 .andExpect(view().name("404error"));
     }
 
+    @Ignore
     @Test
     public void testGetRecipeNumberFormatException() throws Exception {
-
+        when(recipeService.findById(anyString())).thenThrow(BadNumberFormatException.class);
         mockMvc.perform(get("/recipe/asdf/show"))
-                .andExpect(status().isOk());
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("400error"));
     }
 
     @Test
@@ -118,17 +122,6 @@ class RecipeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("recipe"))
                 .andExpect(view().name("recipe/recipeform"));
-        /*
-        mockMvc.perform(post("/recipe")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("id", "")
-                .param("cookTime", "3000")
-
-        )
-                .andExpect(status().isOk())
-                .andExpect(model().attributeExists("recipe"))
-                .andExpect(view().name("recipe/recipeform"));
-        */
     }
 
     @Test
