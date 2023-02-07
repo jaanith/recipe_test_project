@@ -6,11 +6,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 //@DataMongoTest
-//@SpringBootTest
+@SpringBootTest
 class RecipeTestApplicationTests {
 
-	//@Test
-	//void contextLoads() {
-	//}
+	@Test
+	void contextLoads() {
+	}
 
 }

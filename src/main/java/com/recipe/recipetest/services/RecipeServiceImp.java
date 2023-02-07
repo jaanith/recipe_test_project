@@ -8,8 +8,12 @@ import com.recipe.recipetest.domain.Recipe;
 import com.recipe.recipetest.domain.UnitOfMeasure;
 import com.recipe.recipetest.exceptions.NotFoundException;
 import com.recipe.recipetest.repositories.RecipeRepository;
+import com.recipe.recipetest.repositories.reactive.RecipeReactiveRepository;
+import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -17,11 +21,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class RecipeServiceImp implements RecipeService {
-    private final RecipeRepository recipeRepository;
+    private final RecipeReactiveRepository recipeRepository;
     private final RecipeCommandToRecipe recipeCommandToRecipe;
     private final RecipeToRecipeCommand recipeToRecipeCommand;
 
-    public RecipeServiceImp(RecipeRepository recipeRepository,
+    public RecipeServiceImp(RecipeReactiveRepository recipeRepository,
                             RecipeCommandToRecipe recipeCommandToRecipe,
                             RecipeToRecipeCommand recipeToRecipeCommand) {
         this.recipeRepository = recipeRepository;
@@ -29,65 +33,47 @@ public class RecipeServiceImp implements RecipeService {
         this.recipeToRecipeCommand = recipeToRecipeCommand;
     }
 
-    public Set<Recipe> getRecipes() {
-        Set<Recipe> recipes = new HashSet<>();
-        recipeRepository.findAll().iterator().forEachRemaining(recipes::add);
-        return recipes;
+    public Flux<Recipe> getRecipes() {
+        return recipeRepository.findAll();
     }
 
     @Override
-    @Transactional
-    public Recipe findById(String l) {
-        Optional<Recipe> recipeOptional = recipeRepository.findById(l);
-        if(recipeOptional.isEmpty()){
+    public Mono<Recipe> findById(String l) {
+        Recipe foundRecipe = recipeRepository.findById(l).block();
+        if(foundRecipe == null){
             throw new NotFoundException("Recipe not found. for ID value of " + l);
         }
-        Recipe foundRecipe = recipeOptional.get();
-        String recipeId = foundRecipe.getId();
-        for (int i = 0; i < foundRecipe.getIngredients().size(); i++) {
-            if (foundRecipe.getIngredients().get(i).getRecipeId() != recipeId) {
-                foundRecipe.getIngredients().get(i).setRecipeId(recipeId);
-            }
+        foundRecipe.setIngredients(AddIdToIngredients(foundRecipe.getIngredients(), foundRecipe.getId()));
+        return Mono.just(foundRecipe);
+    }
+
+    List<Ingredient> AddIdToIngredients(List<Ingredient> ingredients, String id) {
+        List<Ingredient> ingredientList = new ArrayList<>();
+        for (int i = 0; i< ingredients.size(); i++) {
+            Ingredient ingredient = ingredients.get(i);
+            ingredient.setRecipeId(id);
+            ingredientList.add(ingredient);
         }
-        return foundRecipe;
+        return ingredientList;
     }
 
     @Override
-    @Transactional
-    public RecipeCommand findCommandById(String anyLong) {
-        return recipeToRecipeCommand.convert(findById(anyLong));
+    public Mono<RecipeCommand> findCommandById(String anyLong) {
+        return recipeRepository
+                .findById(anyLong)
+                .map(recipeToRecipeCommand::convert);
     }
 
     @Override
-    @Transactional
-    public RecipeCommand saveRecipeCommand(RecipeCommand command) {
-        Recipe detachedRecipe = recipeCommandToRecipe.convert(command);
-        if (detachedRecipe != null) {
-            Recipe savedRecipe = recipeRepository.insert(detachedRecipe);
-            if (savedRecipe.getId() != null) {
-                return recipeToRecipeCommand.convert(savedRecipe);
-            }
-        }
-        return null;
+    public Mono<RecipeCommand> saveRecipeCommand(RecipeCommand command) {
+        return recipeRepository
+                .save(Objects.requireNonNull(recipeCommandToRecipe.convert(command)))
+                .map(recipeToRecipeCommand::convert);
     }
 
-    /*
-    As MongoDB is not capable of generating id's, then this has to do it
-     */
-    String getUniqueId() {
-        Set<String> recipes = recipeRepository.findAll().stream().map(x->x.getId()).collect(Collectors.toSet());
-        int i = 0;
-        while(i < 1000) {
-            String newId = UUID.randomUUID().toString();
-            if (!recipes.contains(newId)) {
-                return newId;
-            }
-            i++;
-        }
-        return null;
-    }
     @Override
-    public void deleteById(String idToDelete) {
-        recipeRepository.deleteById(idToDelete);
+    public Mono<Void> deleteById(String idToDelete) {
+        recipeRepository.deleteById(idToDelete).block();
+        return Mono.empty();
     }
 }

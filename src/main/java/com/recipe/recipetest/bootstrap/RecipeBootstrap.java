@@ -4,7 +4,11 @@ import com.recipe.recipetest.domain.*;
 import com.recipe.recipetest.repositories.CategoryRepository;
 import com.recipe.recipetest.repositories.RecipeRepository;
 import com.recipe.recipetest.repositories.UnitOfMeasureRepository;
+import com.recipe.recipetest.repositories.reactive.CategoryReactiveRepository;
+import com.recipe.recipetest.repositories.reactive.RecipeReactiveRepository;
+import com.recipe.recipetest.repositories.reactive.UnitOfMeasureReactiveRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
@@ -40,6 +44,14 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
             "Dash"
     );
 
+    //@Autowired
+    //UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
+
+    //@Autowired
+    //CategoryReactiveRepository categoryReactiveRepository;
+    //@Autowired
+    //RecipeReactiveRepository recipeReactiveRepository;
+
     private final CategoryRepository categoryRepository;
     private final RecipeRepository recipeRepository;
     private final UnitOfMeasureRepository unitOfMeasureRepository;
@@ -66,7 +78,13 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
                 recipeRepository.save(recipes.get(i));
             }
         }
+        /*
         log.debug("Loading Bootstrap Data");
+        log.error("#######");
+        log.error("Count: " + unitOfMeasureReactiveRepository.count().block().toString());
+        log.error("Count: " + categoryReactiveRepository.count().block().toString());
+        log.error("Count: " + recipeReactiveRepository.count().block().toString());
+        */
     }
 
     private void loadCategories() {

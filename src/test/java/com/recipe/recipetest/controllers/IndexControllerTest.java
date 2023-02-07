@@ -12,12 +12,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
-import org.springframework.web.context.WebApplicationContext;
-
+import reactor.core.publisher.Flux;
 
 
 import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -32,7 +31,6 @@ class IndexControllerTest {
     RecipeService recipeService;
 
     AutoCloseable closeable;
-    MockMvc mockMvc;
 
 
     @BeforeEach
@@ -43,6 +41,7 @@ class IndexControllerTest {
 
     @Test
     public void testMockMVC() throws Exception {
+        when(recipeService.getRecipes()).thenReturn(Flux.empty());
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         mockMvc.perform(MockMvcRequestBuilders.get("/"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -57,8 +56,8 @@ class IndexControllerTest {
         initialRecipes.add(new Recipe());
         initialRecipes.add(new Recipe());
 
-        when(recipeService.getRecipes()).thenReturn(initialRecipes);
-        ArgumentCaptor<Set<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Set.class);
+        when(recipeService.getRecipes()).thenReturn(Flux.fromIterable(initialRecipes));
+        ArgumentCaptor<List<Recipe>> argumentCaptor = ArgumentCaptor.forClass(List.class);
 
         //when
         String viewName = controller.getIndexPage(model);
@@ -67,7 +66,7 @@ class IndexControllerTest {
         //Check if model addAttribute method is called exactly one time
         //use matcher like "eq" and anySet()
         verify(model, times(1)).addAttribute(eq("recipes"), argumentCaptor.capture());
-        Set<Recipe> setReceived = argumentCaptor.getValue();
+        List<Recipe> setReceived = argumentCaptor.getValue();
         assertEquals(2, setReceived.size());
         //Check if recipeService method get recipes is called exactly one time
         verify(recipeService, times(1)).getRecipes();

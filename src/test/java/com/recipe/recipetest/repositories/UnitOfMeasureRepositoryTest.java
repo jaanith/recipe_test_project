@@ -16,11 +16,11 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 //@DataMongoTest
-//@SpringBootTest
-//@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@ExtendWith(SpringExtension.class)
 class UnitOfMeasureRepositoryTest {
 
-    /*
+
     @Autowired
     UnitOfMeasureRepository unitOfMeasureRepository;
 
@@ -29,26 +29,26 @@ class UnitOfMeasureRepositoryTest {
 
     @Autowired
     RecipeRepository recipeRepository;
-    */
+
 
     @BeforeEach
     void setUp() {
-        //recipeRepository.deleteAll();
-        //unitOfMeasureRepository.deleteAll();
-        //categoryRepository.deleteAll();
-        //RecipeBootstrap recipeBootstrap = new RecipeBootstrap(categoryRepository, recipeRepository, unitOfMeasureRepository);
-        //recipeBootstrap.onApplicationEvent(null);
+        recipeRepository.deleteAll();
+        unitOfMeasureRepository.deleteAll();
+        categoryRepository.deleteAll();
+        RecipeBootstrap recipeBootstrap = new RecipeBootstrap(categoryRepository, recipeRepository, unitOfMeasureRepository);
+        recipeBootstrap.onApplicationEvent(null);
     }
 
     @Test
     void findByDescription() {
-        //Optional<UnitOfMeasure> unitOfMeasureOptional = unitOfMeasureRepository.findByDescription("Teaspoon");
-        //assertEquals("Teaspoon", unitOfMeasureOptional.get().getDescription());
+        Optional<UnitOfMeasure> unitOfMeasureOptional = unitOfMeasureRepository.findByDescription("Teaspoon");
+        assertEquals("Teaspoon", unitOfMeasureOptional.get().getDescription());
     }
 
     @Test
     void findByDescriptionCup() {
-        //Optional<UnitOfMeasure> unitOfMeasureOptional = unitOfMeasureRepository.findByDescription("Cup");
-        //assertEquals("Cup", unitOfMeasureOptional.get().getDescription());
+        Optional<UnitOfMeasure> unitOfMeasureOptional = unitOfMeasureRepository.findByDescription("Cup");
+        assertEquals("Cup", unitOfMeasureOptional.get().getDescription());
     }
 }
