@@ -28,13 +28,14 @@ public class IngredientCommandToIngredient implements Converter<IngredientComman
         if (source.getId() != null && !source.getId().equals("")) {
             ingredient.setId(source.getId());
         }
+        /*
         if(source.getRecipeId() != null && !source.getRecipeId().equals("")){
             Recipe recipe = new Recipe();
             recipe.setId(source.getRecipeId());
             ingredient.setRecipe(recipe);
             recipe.addIngredient(ingredient);
         }
-
+        */
         ingredient.setAmount(source.getAmount());
         ingredient.setDescription(source.getDescription());
         ingredient.setUnitOfMeasure(unitOfMeasureConverter.convert(source.getUnitOfMeasure()));

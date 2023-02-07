@@ -1,7 +1,9 @@
 package com.recipe.recipetest.converters;
 
 import com.recipe.recipetest.commands.CategoryCommand;
+import com.recipe.recipetest.commands.UnitOfMeasureCommand;
 import com.recipe.recipetest.domain.Category;
+import com.recipe.recipetest.domain.UnitOfMeasure;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,11 +15,11 @@ class UnitOfMeasureToUnitOfMeasureCommandTest {
 
     public static final String ID_VALUE = "1L";
     public static final String DESCRIPTION = "description";
-    CategoryCommandToCategory converter;
+    UnitOfMeasureCommandToUnitOfMeasure converter;
 
     @BeforeEach
     void setUp() {
-        converter = new CategoryCommandToCategory();
+        converter = new UnitOfMeasureCommandToUnitOfMeasure();
     }
 
     @Test
@@ -27,18 +29,18 @@ class UnitOfMeasureToUnitOfMeasureCommandTest {
 
     @Test
     public void testEmptyObject() throws Exception {
-        assertNotNull(converter.convert(new CategoryCommand()));
+        assertNotNull(converter.convert(new UnitOfMeasureCommand()));
     }
 
     @Test
     void convert() {
         //given
-        CategoryCommand categoryCommand = new CategoryCommand();
+        UnitOfMeasureCommand categoryCommand = new UnitOfMeasureCommand();
         categoryCommand.setId(ID_VALUE);
         categoryCommand.setDescription(DESCRIPTION);
 
         //when
-        Category category = converter.convert(categoryCommand);
+        UnitOfMeasure category = converter.convert(categoryCommand);
 
         //then
         assertEquals(ID_VALUE, category.getId());

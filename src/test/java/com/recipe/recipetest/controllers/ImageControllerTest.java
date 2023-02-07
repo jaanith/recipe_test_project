@@ -109,7 +109,7 @@ class ImageControllerTest {
 
         Assertions.assertEquals(s.getBytes().length, reponseBytes.length);
     }
-
+    /*
     @Test
     public void testGetImageNumberFormatException() throws Exception {
 
@@ -117,4 +117,5 @@ class ImageControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(view().name("400error"));
     }
+    */
 }

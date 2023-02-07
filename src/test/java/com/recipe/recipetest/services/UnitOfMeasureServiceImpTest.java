@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,7 +38,7 @@ class UnitOfMeasureServiceImpTest {
     @Test
     void listAllUoms() {
         //given
-        Set<UnitOfMeasure> unitOfMeasures = new HashSet<>();
+        List<UnitOfMeasure> unitOfMeasures = new ArrayList<>();
         UnitOfMeasure uom1 = new UnitOfMeasure();
         uom1.setId("1L");
         unitOfMeasures.add(uom1);
@@ -46,7 +47,7 @@ class UnitOfMeasureServiceImpTest {
         uom2.setId("2L");
         unitOfMeasures.add(uom2);
 
-        when(unitOfMeasureRepository.findAll()).thenReturn((List<UnitOfMeasure>) unitOfMeasures);
+        when(unitOfMeasureRepository.findAll()).thenReturn(unitOfMeasures);
 
         //when
         Set<UnitOfMeasureCommand> commands = service.listAllUoms();

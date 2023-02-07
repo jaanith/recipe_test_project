@@ -1,7 +1,6 @@
 package com.recipe.recipetest.services;
 
 import com.recipe.recipetest.commands.IngredientCommand;
-import com.recipe.recipetest.commands.UnitOfMeasureCommand;
 import com.recipe.recipetest.converters.IngredientCommandToIngredient;
 import com.recipe.recipetest.converters.IngredientToIngredientCommand;
 import com.recipe.recipetest.converters.UnitOfMeasureToUnitOfMeasureCommand;
@@ -49,15 +48,15 @@ public class IngredientServiceImp implements IngredientService {
 
         Recipe recipe = recipeOptional.get();
 
-        Optional<IngredientCommand> ingredientCommandOptional = recipe.getIngredients().stream()
-                .filter(ingredient -> ingredient.getId().equals(ingredientId))
-                .map(ingredientToIngredientCommand::convert).findFirst();
+        Optional<Ingredient> ingredientOptional = recipe.getIngredients().stream()
+                .filter(ingredient -> ingredient.getId().equals(ingredientId)).findFirst();
 
-        if(ingredientCommandOptional.isEmpty()){
+        if(ingredientOptional.isEmpty()){
             return ingredientNotFound("Ingredient id not found. Id: ", ingredientId);
         }
-
-        return ingredientCommandOptional.get();
+        Ingredient ingredientFound = ingredientOptional.get();
+        ingredientFound.setRecipeId(recipeId);
+        return ingredientToIngredientCommand.convert(ingredientFound);
     }
 
     public IngredientCommand ingredientNotFound(String message, String id) {
@@ -69,7 +68,11 @@ public class IngredientServiceImp implements IngredientService {
     @Transactional
     public IngredientCommand saveIngredientCommand(IngredientCommand command) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(command.getRecipeId());
-        command.setUnitOfMeasure(getUnitOfMeasureFromIngredientCommand(command.getUnitOfMeasureId()));
+        UnitOfMeasure ingredientUnitOfMeasure = getUnitOfMeasureFromIngredientCommand(command);
+        if(ingredientUnitOfMeasure == null) {
+            throw new RuntimeException("UOM NOT FOUND");
+        }
+        command.setUnitOfMeasure(unitOfMeasureToUnitOfMeasureCommand.convert(ingredientUnitOfMeasure));
         if(recipeOptional.isEmpty()){
             log.error("Recipe not found for id: " + command.getRecipeId());
             return new IngredientCommand();
@@ -86,15 +89,15 @@ public class IngredientServiceImp implements IngredientService {
                 Ingredient ingredientFound = ingredientOptional.get();
                 ingredientFound.setDescription(command.getDescription());
                 ingredientFound.setAmount(command.getAmount());
-                ingredientFound.setUnitOfMeasure(unitOfMeasureRepository
-                        .findById(command.getUnitOfMeasure().getId())
-                        .orElseThrow(() -> new RuntimeException("UOM NOT FOUND")));
+                //Already got from database
+                ingredientFound.setUnitOfMeasure(ingredientUnitOfMeasure);
             } else {
                 //add new Ingredient
 
                 Ingredient ingredient = ingredientCommandToIngredient.convert(command);
                 assert ingredient != null;
-                ingredient.setRecipe(recipe);
+                //ingredient.setRecipe(recipe);
+                ingredient.setRecipeId(recipe.getId());
                 recipe.addIngredient(ingredient);
             }
 
@@ -110,12 +113,19 @@ public class IngredientServiceImp implements IngredientService {
                 savedIngredientOptional = savedRecipe.getIngredients().stream()
                         .filter(recipeIngredients -> recipeIngredients.getDescription().equals(command.getDescription()))
                         .filter(recipeIngredients -> recipeIngredients.getAmount().equals(command.getAmount()))
-                        .filter(recipeIngredients -> recipeIngredients.getUnitOfMeasure().getId() == command.getUnitOfMeasure().getId())
+                        .filter(recipeIngredients -> recipeIngredients.getUnitOfMeasure().getId().equals(command.getUnitOfMeasure().getId()))
                         .findFirst();
             }
 
             //to do check for fail
-            return ingredientToIngredientCommand.convert(savedIngredientOptional.get());
+            if (savedIngredientOptional.isPresent()) {
+                Ingredient savedIngredient = savedIngredientOptional.get();
+                if(savedIngredient.getRecipeId() == null || savedIngredient.getRecipeId().equals("")) {
+                    savedIngredient.setRecipeId(savedRecipe.getId());
+                }
+                return ingredientToIngredientCommand.convert(savedIngredientOptional.get());
+            }
+            return null;
         }
 
     }
@@ -138,9 +148,6 @@ public class IngredientServiceImp implements IngredientService {
                     .findFirst();
 
             if(ingredientOptional.isPresent()){
-                log.debug("found Ingredient");
-                Ingredient ingredientToDelete = ingredientOptional.get();
-                ingredientToDelete.setRecipe(null);
                 recipe.getIngredients().remove(ingredientOptional.get());
                 recipeRepository.save(recipe);
             }
@@ -149,8 +156,24 @@ public class IngredientServiceImp implements IngredientService {
         }
     }
 
-    private UnitOfMeasureCommand getUnitOfMeasureFromIngredientCommand(String value) {
-        Optional<UnitOfMeasure> uom = unitOfMeasureRepository.findById(value);
-        return uom.map(unitOfMeasureToUnitOfMeasureCommand::convert).orElse(null);
+    private UnitOfMeasure getUnitOfMeasureFromIngredientCommand(IngredientCommand ingredientCommand) {
+        String idValue = ingredientCommand.getUnitOfMeasureId();
+        String actualValue = ingredientCommand.getUnitOfMeasureValue();
+        Optional<UnitOfMeasure> uom = unitOfMeasureRepository.findById(idValue);
+
+        if (uom.isPresent()) {
+            return uom.get();
+        }
+        Optional<UnitOfMeasure> uom2 = unitOfMeasureRepository.findAll().stream().filter(x -> x.getId().equals(idValue)).findFirst();
+        if (uom2.isPresent()) {
+            return uom2.get();
+        }
+        if (actualValue != null) {
+            Optional<UnitOfMeasure> uom3 = unitOfMeasureRepository.findByDescription(actualValue);
+            if (uom3.isPresent()) {
+                return  uom3.get();
+            }
+        }
+        return null;
     }
 }

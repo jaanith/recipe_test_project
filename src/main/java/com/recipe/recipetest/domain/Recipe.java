@@ -20,7 +20,7 @@ import java.util.Set;
 @Document(collection = "recipes")
 public class Recipe {
 
-    @Id
+    @MongoId
     private String id;
 
     private String description;

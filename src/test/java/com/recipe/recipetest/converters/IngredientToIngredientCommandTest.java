@@ -42,7 +42,7 @@ class IngredientToIngredientCommandTest {
         //given
         Ingredient ingredient = new Ingredient();
         ingredient.setId(ID_VALUE);
-        ingredient.setRecipe(RECIPE);
+        ingredient.setRecipeId(RECIPE.getId());
         ingredient.setAmount(AMOUNT);
         ingredient.setDescription(DESCRIPTION);
         ingredient.setUnitOfMeasure(null);
@@ -61,7 +61,7 @@ class IngredientToIngredientCommandTest {
         //given
         Ingredient ingredient = new Ingredient();
         ingredient.setId(ID_VALUE);
-        ingredient.setRecipe(RECIPE);
+        ingredient.setRecipeId(RECIPE.getId());
         ingredient.setAmount(AMOUNT);
         ingredient.setDescription(DESCRIPTION);
 

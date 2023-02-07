@@ -10,10 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.*;
@@ -49,9 +46,9 @@ class RecipeServiceImpTest {
     @Test
     void getRecipes() {
         Recipe recipe = new Recipe();
-        HashSet<Recipe> initialRecipes = new HashSet<>();
+        List<Recipe> initialRecipes = new ArrayList<>();
         initialRecipes.add(recipe);
-        when(recipeRepository.findAll()).thenReturn((List<Recipe>) initialRecipes);
+        when(recipeRepository.findAll()).thenReturn(initialRecipes);
 
         Set<Recipe> recipes = recipeService.getRecipes();
         //assertEquals(0, recipes.size());

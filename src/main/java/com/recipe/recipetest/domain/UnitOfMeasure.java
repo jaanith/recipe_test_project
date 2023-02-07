@@ -1,17 +1,17 @@
 package com.recipe.recipetest.domain;
 
-import org.springframework.data.annotation.Id;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.MongoId;
+
 
 @Getter
 @Setter
-@Document
+@Document(collection = "unitofmeasures")
 public class UnitOfMeasure {
 
-    @Id
+    @MongoId
     private String Id;
     private String description;
 }

@@ -40,9 +40,16 @@ public class RecipeServiceImp implements RecipeService {
     public Recipe findById(String l) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(l);
         if(recipeOptional.isEmpty()){
-            throw new NotFoundException("Recipe not found. for ID value of " + l.toString());
+            throw new NotFoundException("Recipe not found. for ID value of " + l);
         }
-        return recipeOptional.get();
+        Recipe foundRecipe = recipeOptional.get();
+        String recipeId = foundRecipe.getId();
+        for (int i = 0; i < foundRecipe.getIngredients().size(); i++) {
+            if (foundRecipe.getIngredients().get(i).getRecipeId() != recipeId) {
+                foundRecipe.getIngredients().get(i).setRecipeId(recipeId);
+            }
+        }
+        return foundRecipe;
     }
 
     @Override

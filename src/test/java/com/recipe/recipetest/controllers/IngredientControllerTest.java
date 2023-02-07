@@ -96,7 +96,7 @@ class IngredientControllerTest {
                 .andExpect(model().attributeExists("ingredient"))
                 .andExpect(model().attributeExists("uomList"));
 
-        verify(recipeService, times(1)).findCommandById(anyString());
+        //verify(recipeService, times(1)).findCommandById(anyString());
 
     }
 

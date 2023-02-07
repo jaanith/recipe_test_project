@@ -4,6 +4,7 @@ import com.recipe.recipetest.commands.IngredientCommand;
 import com.recipe.recipetest.converters.*;
 import com.recipe.recipetest.domain.Ingredient;
 import com.recipe.recipetest.domain.Recipe;
+import com.recipe.recipetest.domain.UnitOfMeasure;
 import com.recipe.recipetest.repositories.RecipeRepository;
 import com.recipe.recipetest.repositories.UnitOfMeasureRepository;
 import org.junit.jupiter.api.Assertions;
@@ -89,6 +90,9 @@ class IngredientServiceImpTest {
         command.setUnitOfMeasureId("1");
 
         Optional<Recipe> recipeOptional = Optional.of(new Recipe());
+        UnitOfMeasure uom = new UnitOfMeasure();
+        uom.setId("1");
+        uom.setDescription("uom");
 
         Recipe savedRecipe = new Recipe();
         savedRecipe.addIngredient(new Ingredient());
@@ -96,6 +100,7 @@ class IngredientServiceImpTest {
 
         when(recipeRepository.findById(anyString())).thenReturn(recipeOptional);
         when(recipeRepository.save(any())).thenReturn(savedRecipe);
+        when(unitOfMeasureRepository.findById(anyString())).thenReturn(Optional.of(uom));
 
         //when
         IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command);
@@ -114,7 +119,7 @@ class IngredientServiceImpTest {
         Ingredient ingredient = new Ingredient();
         ingredient.setId("3L");
         recipe.addIngredient(ingredient);
-        ingredient.setRecipe(recipe);
+        ingredient.setRecipeId(recipe.getId());
         Optional<Recipe> recipeOptional = Optional.of(recipe);
 
         when(recipeRepository.findById(anyString())).thenReturn(recipeOptional);
