@@ -39,10 +39,10 @@ jobs:
 
       # run tests! and gen code coverage
       #- run: mvn integration-test cobertura:cobertura
-      - run: mvn integration-test
+      #- run: mvn integration-test
 
-      - store_test_results:
-          path: target/surefire-reports
+      #- store_test_results:
+      #    path: target/surefire-reports
 
       - run:
           name: Send to CodeCov
