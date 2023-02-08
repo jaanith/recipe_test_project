@@ -55,8 +55,6 @@ public class RecipeToRecipeCommand implements Converter<Recipe, RecipeCommand> {
                     .forEach(ingredient -> command.getIngredients()
                             .add(ingredientConverter.convert(ingredient)));
         }
-        //System.out.println("Categories " + command.getCategories().size());
-        //System.out.println("Ingredients " + command.getIngredients().size());
         return command;
     }
 }

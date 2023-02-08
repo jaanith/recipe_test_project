@@ -1,13 +1,13 @@
 package com.recipe.recipetest.controllers;
 
 import com.recipe.recipetest.commands.RecipeCommand;
-import com.recipe.recipetest.converters.StringToLongConverter;
 import com.recipe.recipetest.services.RecipeService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -15,47 +15,43 @@ import org.springframework.web.bind.annotation.*;
 public class RecipeController {
 
     private static final String RECIPE_RECIPEFORM_URL = "recipe/recipeform";
-
+    private static final String RECIPE_SHOW = "recipe/show";
+    private static final String INITIAL_PAGE = "redirect:/index";
     private final RecipeService recipeService;
-    private final StringToLongConverter stringToLongConverter;
+    private WebDataBinder webDataBinder;
 
-    public RecipeController(RecipeService recipeService, StringToLongConverter stringToLongConverter) {
+    public RecipeController(RecipeService recipeService) {
         this.recipeService = recipeService;
-        this.stringToLongConverter = stringToLongConverter;
     }
 
-    @RequestMapping("/recipe/{id}/show")
+    @InitBinder
+    public void initBinder(WebDataBinder webDataBinder){
+        this.webDataBinder = webDataBinder;
+    }
+
+    @GetMapping("/recipe/{id}/show")
     public String ShowById(@PathVariable String id, Model model) {
-        model.addAttribute("recipe", recipeService.findById(id).block());
-        return "recipe/show";
+        model.addAttribute("recipe", recipeService.findById(id));
+        return RECIPE_SHOW;
     }
 
-    @RequestMapping({"/recipe", "/recipe/"})
-    public String recipeDefaultPage(Model model) {
-        model.addAttribute("recipes", recipeService.getRecipes().collectList().block());
-        return "index";
-    }
-
-    @RequestMapping("/recipe/new")
+    @GetMapping("/recipe/new")
     public String newRecipe(Model model) {
         model.addAttribute("recipe", new RecipeCommand());
-        log.debug("Directed to recipe form");
-        return "recipe/recipeform";
+        return RECIPE_RECIPEFORM_URL;
     }
 
-    @GetMapping
-    @RequestMapping("/recipe/{id}/update")
+
+    @GetMapping("/recipe/{id}/update")
     public String updateRecipe(@PathVariable String id, Model model){
-        RecipeCommand newRecipeCommand = recipeService.findCommandById(id).block();
-        if (newRecipeCommand != null) {
-            model.addAttribute("recipe", newRecipeCommand );
-            return "recipe/recipeform";
-        }
-        return "redirect:index";
+        model.addAttribute("recipe", recipeService.findCommandById(id) );
+        return RECIPE_RECIPEFORM_URL;
     }
 
     @PostMapping({"/recipe", "/recipe/"})
-    public String saveOrUpdate(@Valid @ModelAttribute("recipe") RecipeCommand recipeCommand, BindingResult bindingResult) {
+    public String saveOrUpdate(@Valid @ModelAttribute("recipe") RecipeCommand recipeCommand, Model model) {
+        webDataBinder.validate();
+        BindingResult bindingResult = webDataBinder.getBindingResult();
 
         if(bindingResult.hasErrors()){
             bindingResult.getAllErrors().forEach(objectError -> {
@@ -63,15 +59,13 @@ public class RecipeController {
             });
             return RECIPE_RECIPEFORM_URL;
         }
-
-        RecipeCommand savedCommand = recipeService.saveRecipeCommand(recipeCommand).block();
-        return "redirect:/recipe/" + savedCommand.getId() + "/show";
+        model.addAttribute("recipe", recipeService.saveRecipeCommand(recipeCommand));
+        return RECIPE_SHOW;
     }
 
-    @GetMapping
-    @RequestMapping("/recipe/{id}/delete")
+    @GetMapping("/recipe/{id}/delete")
     public String deleteById(@PathVariable String id){
-        recipeService.deleteById(id);
-        return "redirect:/";
+        recipeService.deleteById(id).subscribe();
+        return INITIAL_PAGE;
     }
 }

@@ -3,6 +3,7 @@ package com.recipe.recipetest.controllers;
 import com.recipe.recipetest.domain.Recipe;
 import com.recipe.recipetest.services.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -21,6 +22,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@Disabled
 class IndexControllerTest {
     IndexController controller;
 

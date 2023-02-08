@@ -1,15 +1,10 @@
 package com.recipe.recipetest.controllers;
 
-import com.recipe.recipetest.domain.Category;
-import com.recipe.recipetest.domain.UnitOfMeasure;
-import com.recipe.recipetest.repositories.CategoryRepository;
-import com.recipe.recipetest.repositories.UnitOfMeasureRepository;
+
 import com.recipe.recipetest.services.RecipeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.Optional;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class IndexController {
@@ -20,9 +15,10 @@ public class IndexController {
         this.recipeService = recipeService;
     }
 
-    @RequestMapping({"", "/", "/index"})
+    @GetMapping({"", "/", "/index"})
     public String getIndexPage(Model model) {
-        model.addAttribute("recipes", recipeService.getRecipes().collectList().block());
+        //model.addAttribute("recipes", recipeService.getRecipes().collectList().block());
+        model.addAttribute("recipes", recipeService.getRecipes());
         return "index";
     }
 }

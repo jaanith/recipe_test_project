@@ -1,69 +1,56 @@
 package com.recipe.recipetest.controllers;
 
-
-import com.recipe.recipetest.commands.RecipeCommand;
-import com.recipe.recipetest.converters.StringToLongConverter;
+import com.recipe.recipetest.exceptions.NotFoundException;
 import com.recipe.recipetest.services.ImageService;
 import com.recipe.recipetest.services.RecipeService;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.http.MediaType;
+import org.springframework.http.codec.multipart.FilePart;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
+@Slf4j
 @Controller
 public class ImageController {
 
     private  final ImageService imageService;
     private final RecipeService recipeService;
-    private final StringToLongConverter stringToLongConverter;
 
     public ImageController(ImageService imageService,
-                           RecipeService recipeService,
-                           StringToLongConverter stringToLongConverter) {
+                           RecipeService recipeService) {
         this.imageService = imageService;
         this.recipeService = recipeService;
-        this.stringToLongConverter = stringToLongConverter;
     }
 
     @GetMapping("recipe/{id}/image")
     public String showUploadForm(@PathVariable String id, Model model){
-        model.addAttribute("recipe", recipeService.findCommandById(id).block());
-
+        model.addAttribute("recipe", recipeService.findCommandById(id));
         return "recipe/imageuploadform";
     }
 
-    @PostMapping("recipe/{id}/image")
-    public String handleImagePost(@PathVariable String id, @RequestParam("imagefile") MultipartFile file){
-        imageService.saveImageFile(id, file).block();
+    @PostMapping("/recipe/{recipeId}/image")
+    public Mono<String> uploadImage(@PathVariable String recipeId, @RequestPart("imagefile") Mono<FilePart> image) {
 
-        return "redirect:/recipe/" + id + "/show";
+        log.debug("Uploading an image for recipe: " + recipeId);
+
+        return image.map(imageToSave -> imageToSave)
+                .flatMap(imageToSave -> imageService.saveRecipeImage(recipeId, imageToSave))
+                .thenReturn("redirect:/recipe/" + recipeId + "/show");
     }
 
-    @GetMapping("recipe/{id}/recipeimage")
-    public void renderImageFromDB(@PathVariable String id, HttpServletResponse response) throws IOException {
-        RecipeCommand recipeCommand = recipeService.findCommandById(id).block();
 
-        assert recipeCommand != null;
-        if (recipeCommand.getImage() != null) {
-            byte[] byteArray = new byte[recipeCommand.getImage().length];
-            int i = 0;
+    @GetMapping(value = "/recipe/{recipeId}/recipeimage", produces = MediaType.IMAGE_JPEG_VALUE)
+    public Mono<Void> renderRecipeImage(@PathVariable String recipeId, ServerHttpResponse response) {
 
-            for (Byte wrappedByte : recipeCommand.getImage()){
-                byteArray[i++] = wrappedByte; //auto unboxing
-            }
+        return recipeService.findById(recipeId)
+                .switchIfEmpty(Mono.error(new NotFoundException("Recipe not found in database!")))
+                .map(recipe -> response.bufferFactory().wrap(ArrayUtils.toPrimitive(recipe.getImage())))
+                .flatMap(image -> response.writeWith(Flux.just(image)));
 
-            response.setContentType("image/jpeg");
-            InputStream is = new ByteArrayInputStream(byteArray);
-            IOUtils.copy(is, response.getOutputStream());
-        }
     }
 }

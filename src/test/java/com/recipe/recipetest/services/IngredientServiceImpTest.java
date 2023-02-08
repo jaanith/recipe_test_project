@@ -1,6 +1,7 @@
 package com.recipe.recipetest.services;
 
 import com.recipe.recipetest.commands.IngredientCommand;
+import com.recipe.recipetest.commands.UnitOfMeasureCommand;
 import com.recipe.recipetest.converters.*;
 import com.recipe.recipetest.domain.Ingredient;
 import com.recipe.recipetest.domain.Recipe;
@@ -12,7 +13,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -86,11 +90,15 @@ class IngredientServiceImpTest {
         command.setId("3L");
         command.setRecipeId("2L");
         command.setUnitOfMeasureId("1");
+        command.setUnitOfMeasureValue("uom");
 
         Mono<Recipe> recipeOptional = Mono.just(new Recipe());
         UnitOfMeasure uom = new UnitOfMeasure();
         uom.setId("1");
         uom.setDescription("uom");
+        UnitOfMeasureToUnitOfMeasureCommand uomConverter = new UnitOfMeasureToUnitOfMeasureCommand();
+        UnitOfMeasureCommand uomCommand = uomConverter.convert(uom);
+        command.setUnitOfMeasure(uomCommand);
 
         Recipe savedRecipe = new Recipe();
         savedRecipe.addIngredient(new Ingredient());
@@ -99,6 +107,8 @@ class IngredientServiceImpTest {
         when(recipeRepository.findById(anyString())).thenReturn(recipeOptional);
         when(recipeRepository.save(any())).thenReturn(Mono.just(savedRecipe));
         when(unitOfMeasureRepository.findById(anyString())).thenReturn(Mono.just(uom));
+        when(unitOfMeasureRepository.findAll()).thenReturn(Flux.fromIterable(List.of(uom)));
+        when(unitOfMeasureRepository.findByDescription(anyString())).thenReturn(Mono.just(uom));
 
         //when
         IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command).block();
@@ -124,7 +134,7 @@ class IngredientServiceImpTest {
         when(recipeRepository.save(any())).thenReturn(Mono.just(recipe));
 
         //when
-        ingredientService.deleteById("1L", "3L");
+        ingredientService.deleteById("1L", "3L").subscribe();
 
         //then
         verify(recipeRepository, times(1)).findById(anyString());
